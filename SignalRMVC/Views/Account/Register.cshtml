@@ -1,0 +1,21 @@
+﻿@{
+    Layout = "AccountLayout";
+}
+
+@*<div>
+    <form asp-controller="Account" asp-action="Register">
+        <input type="text" name="username" placeholder="Your name" />
+        <input type="password" name="password" placeholder="Your password" />
+        <button type="submit">Register</button>
+    </form>
+</div>*@
+
+<h2 class="active">Sign Up</h2>
+<form asp-controller="Account" asp-action="Register">
+    <input type="text" name="username" placeholder="Your name" />
+    <input type="password" name="password" placeholder="Your password" />
+    <button type="submit">Register</button>
+</form>
+<div class="formFooter">
+    <a class="underlineHover" asp-controller="Account" asp-action="Login">Register</a>
+</div>

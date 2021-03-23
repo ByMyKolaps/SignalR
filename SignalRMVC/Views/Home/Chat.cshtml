@@ -1,0 +1,129 @@
+﻿@model Chat
+@using System.Security.Claims;
+@{
+    var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+    var currentUser = Model.Users.FirstOrDefault(user => user.UserId == userId);
+}
+
+<div class="chat-header">
+    <div class="member-count">
+        <button id="membersBtn">@Model.Users.Count() members</button>
+    </div>
+    <div class="room-name">
+        <h2>@Model.Name</h2>
+    </div>
+    <div class="leave-button">
+        <form method="post">
+            <button type="submit">Leave room</button>
+        </form>
+    </div>
+</div>
+
+<div class="chat-body">
+    @foreach (var message in Model.Messages)
+    {
+        <div class="message">
+            <header>@message.Name: </header>
+            <p>@message.Text</p>
+            <footer>@message.Timestamp</footer>
+        </div>
+    }
+</div>
+
+<form class="chat-input" onsubmit="sendMessage(event)" asp-controller="Home" asp-action="SendMessage">
+    <input type="hidden" name="roomId" value="@Model.Id" />
+    <input type="text" name="text" id="message-input" />
+    <button type="submit">Send</button>
+</form>
+
+<div class="modal" id="members-modal">
+    <div class="modal-body">
+        <button type="button" class="close" onclick="closeMembersModal()">X</button>
+        <header>Members</header>
+        @foreach (var member in Model.Users)
+        {
+            <div>
+                @member.User.UserName
+                @if(currentUser.Role == UserRole.Admin && member.UserId != userId)
+                {
+                    <a asp-controller="Home" asp-action="KickMember" asp-route-userId="@member.UserId" asp-route-chatId="@Model.Id">
+                        Kick
+                    </a>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/microsoft/signalr/dist/browser/signalr.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        var hubConnection = new signalR.HubConnectionBuilder()
+            .withUrl("/chatHub")
+            .build();
+
+        var _connectionId = '';
+
+        hubConnection.on("RecieveMessage", function (data) {
+            console.log(data);
+
+            var message = document.createElement("div")
+            message.classList.add("message")
+
+            var header = document.createElement("header")
+            header.appendChild(document.createTextNode(data.name))
+
+            var p = document.createElement("p")
+            p.appendChild(document.createTextNode(data.text))
+
+            var footer = document.createElement("footer")
+            footer.appendChild(document.createTextNode(data.timestamp))
+
+            message.appendChild(header);
+            message.appendChild(p);
+            message.appendChild(footer);
+
+            document.querySelector('.chat-body').append(message);
+        })
+
+        var joinRoom = function () {
+            var url = '/Chat/JoinRoom/' + _connectionId + '/@Model.Id'
+            axios.post(url, null)
+            .then(res => {
+                console.log('Room Joined!', res);
+            })
+            .catch(function (err) {
+                console.log(err);
+            })
+        }
+
+        hubConnection.start()
+            .then(function () {
+                hubConnection.invoke('getConnectionId')
+                    .then(function (connectionId) {
+                        _connectionId = connectionId
+                        joinRoom();
+                    })
+            })
+            .catch(function (err) {
+                console.log(err)
+            })
+
+
+        var sendMessage = function (event) {
+            event.preventDefault();
+
+            var data = new FormData(event.target);
+            document.getElementById('message-input').value = '';
+            axios.post('/Chat/SendMessage', data)
+                .then(res => {
+                    console.log("Message sent!")
+                })
+                .catch(err => {
+                    console.log("Failer")
+                })
+        }
+
+    </script>
+}

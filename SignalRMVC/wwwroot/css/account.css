@@ -1,0 +1,89 @@
+﻿body {
+    font-family: "Poppins", sans-serif;
+    height: 100vh;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.wrapper {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    min-height: 100%;
+    padding: 20px;
+    background: #342742;
+}
+
+.formContent {
+    border-radius: 10px 10px 10px 10px;
+    background: #fff;
+    max-width: 450px;
+    position: relative;
+    padding: 0px;
+    text-align: center;
+    -webkit-box-shadow: 0 30px 60px 0 rgb(0 0 0 / 30%);
+    box-shadow: 0 30px 60px 0 rgb(0 0 0 / 30%);
+}
+
+h2.active {
+    color: #0d0d0d;
+    border-bottom: 2px solid #5fbae9;
+}
+
+h2 {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    display: inline-block;
+    margin: 40px 8px 10px 8px;
+    color: #cccccc;
+}
+
+input {
+    background-color: #f6f6f6;
+    border: none;
+    color: #0d0d0d;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 5px;
+    width: 85%;
+    border: 2px solid #f6f6f6;
+    border-radius: 5px 5px 5px 5px;
+}
+
+button[type=submit] {
+    background-color: #56baed;
+    border: none;
+    color: white;
+    padding: 15px 80px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    text-transform: uppercase;
+    font-size: 13px;
+    border-radius: 5px 5px 5px 5px;
+    margin: 5px 20px 40px 20px;
+}
+
+.formFooter {
+    background-color: #f6f6f6;
+    border-top: 1px solid #dce8f1;
+    padding: 25px;
+    text-align: center;
+    border-radius: 0 0 10px 10px;
+}
+
+a {
+    color: #92badd;
+    display: inline-block;
+    text-decoration: none;
+    font-weight: 400;
+}
