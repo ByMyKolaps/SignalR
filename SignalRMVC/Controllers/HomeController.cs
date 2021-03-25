@@ -146,6 +146,18 @@ namespace SignalRMVC.Controllers
             return RedirectToAction("Chat", "Home", new { id = id });
         }
 
+        public async Task<IActionResult> LeaveRoom(string userId, int chatId)
+        {
+            var chatUser = _appDbContext.ChatUsers
+                .Where(user => user.UserId == userId && user.ChatId == chatId)
+                .FirstOrDefault();
+
+            _appDbContext.ChatUsers.Remove(chatUser);
+            await _appDbContext.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
+
         public async Task<IActionResult> KickMember(string userId, int chatId)
         {
             var chatUser = _appDbContext.ChatUsers
